@@ -1,6 +1,6 @@
 {
   "name": "tictactoe-experiment",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "\"tictactoe for experimentation purpose\"",
   "main": "src/index",
   "scripts": {
