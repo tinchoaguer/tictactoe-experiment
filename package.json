@@ -2,18 +2,22 @@
   "name": "tictactoe-experiment",
   "version": "1.0.3",
   "description": "\"tictactoe for experimentation purpose\"",
-  "main": "index",
+  "main": "src/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-     "type": "git",
-     "url": "https://github.com/tinchoaguer/tictactoe-experiment.git"
-    },
+    "type": "git",
+    "url": "https://github.com/tinchoaguer/tictactoe-experiment.git"
+  },
   "keywords": [
     "study",
     "cases"
   ],
   "author": "martin aguer <tinchoaguer@gmail.com> (http://example.com)",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.1"
+  }
 }
