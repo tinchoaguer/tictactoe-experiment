@@ -1,12 +1,12 @@
 require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({"tictactoe-experiment":[function(require,module,exports){
 module.exports = class Game {
 
-    constructor() {
-
-        this.squares = Array(9).fill(null);
-        this.end = {};
+   constructor() {
         this.isXNext = true;
+        this.history = [{ squares: Array(9).fill(null), square: null, move: null, end:   {} }];
+        this.stepNumber = 0;
     }
+
 
 
     static getBoard() {
@@ -17,12 +17,39 @@ module.exports = class Game {
         console.log("This is a message from tictactoe package");
     }
 
+    currentSate() {
+        return this.history[this.stepNumber];
+    }
+
+    isADraw() {
+        return !this.currentSate().squares.includes(null) && !this.currentSate().end.winner;
+    }
+
+
+    goToMove(i) {
+        this.stepNumber = i;
+        this.isXNext = (i % 2) === 0;
+    }
+
+
+    saveStatus(history) {
+        this.history = history;
+    }
+
+
     chooseSquare(square) {
 
-        if (this.squares[square] || this.end.winner) return;
-        this.squares.splice(square, 1, this.isXNext ? 'X' : 'O');
+        const move = this.stepNumber + 1;
+        const history = this.history.slice(0, move);
+        const lastStatus = history[history.length - 1];
+        const squares = lastStatus.squares.slice(0, 8);
+        if (squares[square] || lastStatus.end.winner) return;
+        squares.splice(square, 1, this.isXNext ? 'X' : 'O');
+        const end = this.calculateWinner(squares);
+        this.saveStatus(history.concat([{ squares: squares, square: square, move: move, end: end }]));
+        this.stepNumber = move;
         this.isXNext = !this.isXNext;
-        this.end = this.calculateWinner(this.squares);
+
     }
 
     calculateWinner(squares) {
@@ -40,20 +67,20 @@ module.exports = class Game {
             const [a, b, c] = lines[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
                 console.log(a + ' ' + b + ' ' + c);
-                this.end = { winner: squares[a], lines: [a, b, c] };
-                return this.end;
+                return { winner: squares[a], lines: [a, b, c] };
             }
         }
-        this.end = { winner: null, lines: null };
-        return this.end;
+        return { winner: null, lines: null };
     }
 
     getWinnerLines() {
-        return this.end.lines ? this.end.lines : [];
+        const lines = this.currentSate().end.lines;
+        return lines ? lines : [];
     }
 
     isWinnerSquare(square) {
-        return this.end.lines ? this.end.lines.includes(square) : false;
+        const lines = this.currentSate().end.lines;
+        return lines ? lines.includes(square) : false;
     }
 
 
